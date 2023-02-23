@@ -40,7 +40,7 @@ Material:
     - _Offset_Universal: 0
     - _QueueControl: 0
     - _QueueOffset: 0
-    - _Tiling_Universal: 10
+    - _Tiling_Universal: 25
     m_Colors:
     - _BrightColor: {r: 0.3018868, g: 0.3018868, b: 0.3018868, a: 0}
     - _DarkColor: {r: 0.21698111, g: 0.21698111, b: 0.21698111, a: 0}
