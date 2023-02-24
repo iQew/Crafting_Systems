@@ -7,7 +7,7 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: BunjesFX_Test_Environment_Mineral_Mithril_01
+  m_Name: BunjesFX_Test_Environment_Stone_01
   m_Shader: {fileID: 4800000, guid: 2537f34d72bad49438346a59770dc081, type: 3}
   m_ValidKeywords: []
   m_InvalidKeywords: []
@@ -41,13 +41,13 @@ Material:
     - _Offset_Universal: 1
     - _QueueControl: 0
     - _QueueOffset: 0
-    - _Tiling_Universal: 3
+    - _Tiling_Universal: 1
     m_Colors:
-    - _BrightColor: {r: 0.19215682, g: 0.5490196, b: 0.43883875, a: 0}
-    - _DarkColor: {r: 0.18039212, g: 0.3098039, b: 0.22519946, a: 0}
+    - _BrightColor: {r: 0.8584906, g: 0.8584906, b: 0.8584906, a: 0}
+    - _DarkColor: {r: 0.5660378, g: 0.5660378, b: 0.5660378, a: 0}
     - _EmissionColor: {r: 1, g: 1, b: 1, a: 1}
     - _OffsetSeparate: {r: 2.5, g: 0, b: 0, a: 0}
-    - _SelectionColor: {r: 0.32025963, g: 1, b: 0.24056596, a: 0}
+    - _SelectionColor: {r: 0.3202597, g: 1, b: 0.24056602, a: 0}
     - _Tiling: {r: 1, g: 1, b: 0, a: 0}
     - _TilingSeparate: {r: 10, g: 2.5, b: 0, a: 0}
   m_BuildTextureStacks: []

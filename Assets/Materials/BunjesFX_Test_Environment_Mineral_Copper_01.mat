@@ -35,6 +35,7 @@ Material:
     m_Ints: []
     m_Floats:
     - _AlphaCutoff: 0.5
+    - _IsSelected: 0
     - _IsUsingSeparateOffset: 0
     - _IsUsingSeparateTiling: 0
     - _Offset_Universal: 1
@@ -42,10 +43,11 @@ Material:
     - _QueueOffset: 0
     - _Tiling_Universal: 3
     m_Colors:
-    - _BrightColor: {r: 0.5471698, g: 0.3680066, b: 0.19357423, a: 0}
-    - _DarkColor: {r: 0.31132078, g: 0.25615925, b: 0.1806248, a: 0}
+    - _BrightColor: {r: 0.5471698, g: 0.36800656, b: 0.19357419, a: 0}
+    - _DarkColor: {r: 0.31132075, g: 0.25615922, b: 0.18062475, a: 0}
     - _EmissionColor: {r: 1, g: 1, b: 1, a: 1}
     - _OffsetSeparate: {r: 2.5, g: 0, b: 0, a: 0}
+    - _SelectionColor: {r: 0.32025966, g: 1, b: 0.24056599, a: 0}
     - _Tiling: {r: 1, g: 1, b: 0, a: 0}
     - _TilingSeparate: {r: 10, g: 2.5, b: 0, a: 0}
   m_BuildTextureStacks: []

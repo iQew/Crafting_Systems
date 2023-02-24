@@ -3,12 +3,12 @@ using UnityEngine;
 
 public class ResourceManager : MonoBehaviour, IResourceReceiver {
 
-    public List<ResourceNode> ResourceNodes;
+    public List<Resource> Resources;
     public PlayerData PlayerData;
 
     private void Start() {
-        for (int i = 0; i < ResourceNodes.Count; i++) {
-            ResourceNodes[i].ResourceReceiver = this;
+        for (int i = 0; i < Resources.Count; i++) {
+            Resources[i].ResourceReceiver = this;
         }
     }
 
