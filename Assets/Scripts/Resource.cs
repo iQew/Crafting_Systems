@@ -64,5 +64,5 @@ public class Resource : MonoBehaviour {
 
     public void SetActive(bool active) {        
         _material.SetFloat("_IsSelected", active ? 1f : 0f);
-    }
+    }  
 }
