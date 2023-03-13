@@ -73,12 +73,8 @@ public class InteractivityManager : MonoBehaviour {
         if (count > 0) {
             for (int i = 0; i < count; i++) {
                 _resourceCache = _nearbyResources[i];
-                if (_resourceCache == null) { // resource has been picked up and got deleted from world
-                    _nearbyResources.RemoveAt(i);
-                } else {
-                    _resourceCache.Proximity = Vector3.Distance(_resourceCache.transform.position, transform.position);
-                    _resourceCache.Active = false;
-                }
+                _resourceCache.Proximity = Vector3.Distance(_resourceCache.transform.position, transform.position);
+                _resourceCache.Active = false;
             }
             _nearbyResources = _nearbyResources.OrderBy(o => o.Proximity).ToList<Resource>();
             proximityResource = _nearbyResources[0];
@@ -97,14 +93,16 @@ public class InteractivityManager : MonoBehaviour {
         return false;
     }
 
-    public bool TryPickUpItem(out ItemDataContainer itemDataContainer) {
-        Debug.Log("KB: currently active: " + _currentlyActiveResource);
+    public void PickUpActiveResource() {        
         if (_currentlyActiveResource != null) {
-            itemDataContainer = _currentlyActiveResource.ItemDataContainer;
-            return true;
+            if(Player.Instance.PickupResource(_currentlyActiveResource)) {
+                _currentlyActiveResource.PickUp();
+                _nearbyResources.Remove(_currentlyActiveResource);
+            } else {
+                Debug.Log("KB: Pickup failed.");
+            }
         } else {
-            itemDataContainer = new ItemDataContainer();
-            return false;
+            Debug.Log("KB: There is nothing to pick up.");
         }
     }
 

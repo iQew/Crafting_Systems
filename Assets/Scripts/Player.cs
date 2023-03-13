@@ -12,8 +12,6 @@ public class Player : MonoBehaviour {
     [SerializeField]
     private InteractivityManager _interactivityManager;
 
-    private ItemDataContainer _itemDataContainerCache;
-
     private void Awake() {
         if (Instance == null) {
             Instance = this;
@@ -26,15 +24,18 @@ public class Player : MonoBehaviour {
         _gameInput.OnInteractAction += gameInput_OnInteractAction;
     }
 
-    private void gameInput_OnInteractAction(object sender, System.EventArgs e) {
-        if (_interactivityManager.TryPickUpItem(out _itemDataContainerCache)) {
-            Debug.Log(
-                "KB: picking up item: " + _itemDataContainerCache.Name
-                + " | amount: " + _itemDataContainerCache.Quantity
-                + " | ID: " + _itemDataContainerCache.ID
-                );
-        } else {
-            Debug.Log("KB: No item to pickup.");
+    public bool PickupResource(Resource resource) {
+        // TODO KB: Check if inventory is full
+        if(Random.Range(0f,1f) > 0.5f) {
+            Debug.Log("KB: added item: " + resource.ItemDataContainer.Name
+                + " | quantity: " + resource.ItemDataContainer.Quantity
+                + " | ID: " + resource.ItemDataContainer.ID);
+            return true;
         }
+        return false;
+    }
+
+    private void gameInput_OnInteractAction(object sender, System.EventArgs e) {
+        _interactivityManager.PickUpActiveResource();
     }
 }
