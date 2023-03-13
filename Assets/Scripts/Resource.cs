@@ -1,7 +1,7 @@
 using UnityEngine;
 
 [RequireComponent(typeof(MeshRenderer))]
-public class Resource : MonoBehaviour {   
+public class Resource : MonoBehaviour {
 
     public IResourceReceiver ResourceReceiver { private get; set; }
 
@@ -19,6 +19,8 @@ public class Resource : MonoBehaviour {
         }
     }
 
+    public ItemDataContainer ItemDataContainer { get; private set; }
+
     [SerializeField]
     [Tooltip("How many resources are looted MIN and MAX.")]
     private Vector2 _dropQuantityMinMax = new Vector2(1f, 1f);
@@ -32,37 +34,23 @@ public class Resource : MonoBehaviour {
     private MeshRenderer _meshRenderer;
     private Material _material;
 
-    private bool _markedForDeath;
-
-    private void Awake() {        
-        if(_inventoryItem == null) {
+    private void Awake() {
+        if (_inventoryItem == null) {
             Debug.LogError("Missing InventoryItem");
-        } else if(_inventoryItem.ID == 0) {
+        } else if (_inventoryItem.ID == 0) {
             Debug.LogError(_inventoryItem.name + " has not set its ID");
+        } else {
+            ItemDataContainer = new ItemDataContainer(
+                        _inventoryItem.ID,
+                        _inventoryItem.name,
+                        Random.Range((int)_dropQuantityMinMax.x, (int)_dropQuantityMinMax.y)
+                     );
         }
         _meshRenderer = GetComponent<MeshRenderer>();
         _material = _meshRenderer.material;
     }
 
-    private void Update() {
-        if(_active) {
-            if(Input.GetKeyUp(KeyCode.E)) {
-                _health--;
-                Debug.Log("KB: " + name + " received interaction key, decreasing health.");
-                if(_health <= 0) {
-                    ResourceReceiver.OnResourceDestruction(new ItemDataContainer(
-                        _inventoryItem.ID,
-                        _inventoryItem.name,
-                        Random.Range((int)_dropQuantityMinMax.x, (int)_dropQuantityMinMax.y)
-                     ));
-                    Destroy(gameObject);
-                }
-            }
-        }        
-    }
-    
-
-    public void SetActive(bool active) {        
+    public void SetActive(bool active) {
         _material.SetFloat("_IsSelected", active ? 1f : 0f);
-    }  
+    }
 }
