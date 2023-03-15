@@ -19,33 +19,53 @@ public class UI_InventorySlot : MonoBehaviour, IPointerEnterHandler, IPointerExi
     [SerializeField]
     private TextMeshProUGUI _quantityText;
 
+    [SerializeField]
+    private GameObject _highlight;
+
+    [SerializeField]
+    private float _maxScaling = 1.125f;
+
+    [SerializeField]
+    private float _animationTime = 0.175f;
+
     private RectTransform _rectTransform;
-    private Vector3 _defaultSize;
+    private Vector2 _defaultSize;
+    private Vector2 _currentSize;
+
+    private bool _isAnimating;
+    private float _targetSize;    
+    private float _animationStep;
+    private bool _isSelected;
+    private float _previousAnimationProgress;
 
     private void Awake() {
         _rectTransform = GetComponent<RectTransform>();        
         ShowEmpty();
     }
 
-    private IEnumerator Start() {
-        for (int i = 0; i < 3; i++) { // wait for 3 frames to finish sizing
-            yield return null;
-        }
+    private void Start() {
         _defaultSize = _rectTransform.sizeDelta;
     }
 
-    public void OnPointerEnter(PointerEventData eventData) {
-        Select();
-    }
-
-    public void OnPointerExit(PointerEventData eventData) {
-        Unselect();
-    }
+    private void Update() {
+        if(_isAnimating) {
+            if(_isSelected) {
+                _rectTransform.sizeDelta = Vector2.Lerp(_currentSize, _defaultSize * _targetSize, _animationStep);
+            } else {
+                _rectTransform.sizeDelta = Vector2.Lerp(_currentSize, _defaultSize, (float)Tweening.EaseOutExpo((double)_animationStep));
+            }
+            _animationStep += Time.deltaTime / _animationTime / _previousAnimationProgress;
+            if(_animationStep >= 1f) {
+                _animationStep = 1f;
+                _isAnimating = false;                
+            }
+        }
+    }    
 
     public void UpdateItem(InventoryItem item, int quantity) {
         if (item != null) {
             _itemImage.sprite = item.artwork;
-            _quantityText.text = GetLeadingZeroNumberString(quantity);
+            _quantityText.text = StringHelper.GetLeadingZeroNumberString(quantity);
             _itemImageGameObject.SetActive(true);
         }
     }
@@ -55,26 +75,35 @@ public class UI_InventorySlot : MonoBehaviour, IPointerEnterHandler, IPointerExi
     }
 
     public void Select() {
-        Debug.Log("KB: selected slot: " + name);
-        _rectTransform.sizeDelta *= Vector3.one * 1.15f;
+        _isSelected = true;
+        _currentSize = _rectTransform.sizeDelta;
+        _targetSize = _maxScaling;
         transform.SetSiblingIndex(lastIndex);
-        Debug.Log("KB: setting: " + name + " to last index: " + lastIndex);
+        _highlight.SetActive(true);
+        _previousAnimationProgress = _animationStep == 0 ? 1f : _animationStep;
+        _animationStep = 0f;
+        _isAnimating = true;
     }
 
     public void Unselect() {
-        Debug.Log("KB: unselected slot: " + name);
-        _rectTransform.sizeDelta = _defaultSize;
+        _isSelected = false;
+        _currentSize = _rectTransform.sizeDelta;
         transform.SetSiblingIndex(index);
-        Debug.Log("KB: setting: " + name + " to original index: " + index);
+        _highlight.SetActive(false);
+        _previousAnimationProgress = _animationStep == 0 ? 1f : _animationStep;
+        _animationStep = 0f;
+        _isAnimating = true;
     }
 
-    private string GetLeadingZeroNumberString(int number) {
-        string result = number.ToString();
-
-        if (number < 10) {
-            result = "0" + number.ToString();
-        }
-        return result;
+    private void OnEnable() {
+        Unselect();
     }
 
+    public void OnPointerEnter(PointerEventData eventData) {
+        Select();
+    }
+
+    public void OnPointerExit(PointerEventData eventData) {
+        Unselect();
+    }
 }

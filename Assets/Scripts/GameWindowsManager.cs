@@ -22,6 +22,7 @@ public class GameWindowsManager : MonoBehaviour {
 
     private void Awake() {
         _gameWindowsBackground.SetActive(false);
+        Cursor.lockState = CursorLockMode.Confined;
     }
 
     private void Start() {
@@ -33,8 +34,7 @@ public class GameWindowsManager : MonoBehaviour {
             _gameWindowsBackground.SetActive(true);
             _crosshair.SetActive(false);
             _UI_Inventory.Show();
-            Mouse.current.WarpCursorPosition(new Vector2(Screen.width / 2f, Screen.height / 2f));
-            Cursor.lockState = CursorLockMode.Confined;
+            //Mouse.current.WarpCursorPosition(new Vector2(Screen.width / 2f, Screen.height / 2f));            
             Cursor.visible = true;
             _vThirdPersonCamera.FullLock();
         } else { // hide inventory
@@ -42,7 +42,6 @@ public class GameWindowsManager : MonoBehaviour {
             _crosshair.SetActive(true);
             _UI_Inventory.Hide();
             _vThirdPersonCamera.FullUnlock();
-            Cursor.lockState = CursorLockMode.Locked;
             Cursor.visible = false;
         }
     }

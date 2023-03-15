@@ -780,7 +780,7 @@ RectTransform:
   m_AnchorMin: {x: 0.15, y: 0.5}
   m_AnchorMax: {x: 0.15, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 439, y: 675}
+  m_SizeDelta: {x: 440, y: 675}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &182166374
 MonoBehaviour:
@@ -794,13 +794,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fb2476b7d46e18248a71a76b38f06a76, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _inventorySlotsGridTransform: {fileID: 1750685517}
   _inventorySlotPrefab: {fileID: 2337077129634867699, guid: 17b32cf6e0744fe4ca05d8ebc7b338e0,
     type: 3}
+  _parentRectTransform: {fileID: 1750685517}
   _cols: 5
   _rows: 6
   _slotSize: 70
-  _slotSpacing: 7.5
+  _spacing: 5
 --- !u!4 &190231198 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6203433961695289980, guid: a4b561ed8146cb048b5a631d09da5402,
@@ -7530,7 +7530,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0.55}
   m_AnchorMax: {x: 1, y: 0.55}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 440}
+  m_SizeDelta: {x: 0, y: 475}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1750685519
 MonoBehaviour:
@@ -7539,7 +7539,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1750685516}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
   m_Name: 
