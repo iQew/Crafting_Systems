@@ -1,9 +1,7 @@
 using UnityEngine;
 
 [RequireComponent(typeof(MeshRenderer))]
-public class Resource : MonoBehaviour {
-
-    public IResourceReceiver ResourceReceiver { private get; set; }
+public class CollectibleResource : MonoBehaviour {
 
     [HideInInspector]
     public float Proximity { get; set; } // used for the player to determine which resource is closest
@@ -19,32 +17,23 @@ public class Resource : MonoBehaviour {
         }
     }
 
-    public ItemDataContainer ItemDataContainer { get; private set; }
-
     [SerializeField]
     [Tooltip("How many resources are looted MIN and MAX.")]
     private Vector2 _dropQuantityMinMax = new Vector2(1f, 1f);
 
-    [SerializeField]
-    private int _health = 5;
+    public int Quantity { get => (int)Random.Range(_dropQuantityMinMax.x, _dropQuantityMinMax.y); private set { } }
 
     [SerializeField]
-    private InventoryItem _inventoryItem;
+    private ItemDataSO _itemData;
 
     private MeshRenderer _meshRenderer;
     private Material _material;
 
     private void Awake() {
-        if (_inventoryItem == null) {
+        if (_itemData == null) {
             Debug.LogError("Missing InventoryItem");
-        } else if (_inventoryItem.ID == 0) {
-            Debug.LogError(_inventoryItem.name + " has not set its ID");
-        } else {
-            ItemDataContainer = new ItemDataContainer(
-                        _inventoryItem.ID,
-                        _inventoryItem.name,
-                        Random.Range((int)_dropQuantityMinMax.x, (int)_dropQuantityMinMax.y)
-                     );
+        } else if (_itemData.ID == 0) {
+            Debug.LogError(_itemData.Name + " has not set its ID");
         }
         _meshRenderer = GetComponent<MeshRenderer>();
         _material = _meshRenderer.material;
@@ -56,5 +45,9 @@ public class Resource : MonoBehaviour {
 
     public void PickUp() {
        Destroy(gameObject);
+    }
+
+    public ItemDataSO GetItemDataSO() {
+        return _itemData;
     }
 }

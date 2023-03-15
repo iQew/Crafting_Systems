@@ -34,7 +34,6 @@ public class GameWindowsManager : MonoBehaviour {
             _gameWindowsBackground.SetActive(true);
             _crosshair.SetActive(false);
             _UI_Inventory.Show();
-            //Mouse.current.WarpCursorPosition(new Vector2(Screen.width / 2f, Screen.height / 2f));            
             Cursor.visible = true;
             _vThirdPersonCamera.FullLock();
         } else { // hide inventory

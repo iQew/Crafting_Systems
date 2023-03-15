@@ -12,24 +12,28 @@ public class Player : MonoBehaviour {
     [SerializeField]
     private InteractivityManager _interactivityManager;
 
+    [SerializeField]
+    private UI_Inventory _UI_Inventory;
+
+    private Inventory _inventory;
+
     private void Awake() {
         if (Instance == null) {
             Instance = this;
         } else {
             Debug.LogError("There should only be one instance of " + name + ".");
         }
+        _inventory = new Inventory(6, 5);
     }
 
     private void Start() {
         _gameInput.OnInteractAction += gameInput_OnInteractAction;
     }
 
-    public bool PickupResource(Resource resource) {
-        // TODO KB: Check if inventory is full
-        if(Random.Range(0f,1f) > 0.5f) {
-            Debug.Log("KB: added item: " + resource.ItemDataContainer.Name
-                + " | quantity: " + resource.ItemDataContainer.Quantity
-                + " | ID: " + resource.ItemDataContainer.ID);
+    public bool PickupResource(CollectibleResource resource) {
+        bool itemAdded = _inventory.AddItem(resource.GetItemDataSO(), resource.Quantity);
+        if (itemAdded) {
+            _UI_Inventory.Refresh(_inventory);
             return true;
         }
         return false;

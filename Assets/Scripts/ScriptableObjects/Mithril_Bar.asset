@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Mithril_Bar
   m_EditorClassIdentifier: 
   ID: 301
-  name: Mithril Bar
-  description: A bar made from mithril ore. Can be used in crafting.
-  artwork: {fileID: 0}
-  quantity: 0
+  Name: Mithril Bar
+  Description: 
+  Artwork: {fileID: 21300000, guid: 2d250b7f13265a7439949a39e48c69ea, type: 3}
+  StackSize: 99

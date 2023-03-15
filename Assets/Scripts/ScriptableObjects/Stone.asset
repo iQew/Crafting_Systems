@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: Stone
   m_EditorClassIdentifier: 
   ID: 500
-  name: Stone
-  description: Can be used in crafting.
-  artwork: {fileID: 0}
+  Name: Stone
+  Description: 
+  Artwork: {fileID: 21300000, guid: 7ae18794f42b48148be69220d879b346, type: 3}
+  StackSize: 500

@@ -3,7 +3,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
-using UnityEngine.UIElements;
+using UnityEngine.UI;
 
 public class UI_InventorySlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler {
     
@@ -62,9 +62,9 @@ public class UI_InventorySlot : MonoBehaviour, IPointerEnterHandler, IPointerExi
         }
     }    
 
-    public void UpdateItem(InventoryItem item, int quantity) {
+    public void UpdateItem(ItemDataSO item, int quantity) {
         if (item != null) {
-            _itemImage.sprite = item.artwork;
+            _itemImage.sprite = item.Artwork;
             _quantityText.text = StringHelper.GetLeadingZeroNumberString(quantity);
             _itemImageGameObject.SetActive(true);
         }

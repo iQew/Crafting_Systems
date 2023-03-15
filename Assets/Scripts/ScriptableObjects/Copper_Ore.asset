@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Copper_Ore
   m_EditorClassIdentifier: 
   ID: 100
-  name: Copper Ore
-  description: Raw copper ore. Can be refined to a copper bar.
-  artwork: {fileID: 0}
-  quantity: 0
+  Name: Copper Ore
+  Description: 
+  Artwork: {fileID: 21300000, guid: 4dc1d7173e919674da31a5a94ea7f3f9, type: 3}
+  StackSize: 250

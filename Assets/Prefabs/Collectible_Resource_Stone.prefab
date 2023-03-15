@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 6203433961695289970}
   - component: {fileID: 6203433961695289981}
   m_Layer: 6
-  m_Name: Resource_Stone
+  m_Name: Collectible_Resource_Stone
   m_TagString: ResourceNode
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -110,6 +110,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f152577ee7cf17542909bde15abccc5b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _dropQuantityMinMax: {x: 1, y: 1}
-  _health: 0
-  _inventoryItem: {fileID: 11400000, guid: b8a7d08220158ea47aa3e159f6879b7c, type: 2}
+  _dropQuantityMinMax: {x: 20, y: 25}
+  _itemData: {fileID: 11400000, guid: b8a7d08220158ea47aa3e159f6879b7c, type: 2}

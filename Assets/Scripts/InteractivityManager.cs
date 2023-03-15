@@ -9,10 +9,10 @@ public class InteractivityManager : MonoBehaviour {
     [SerializeField]
     private Camera ThirdPersonCamera;
 
-    private List<Resource> _nearbyResources;
-    private Resource _resourceCache;
-    private Resource _currentlyActiveResource;
-    private Resource _previousPriorityResource;
+    private List<CollectibleResource> _nearbyResources;
+    private CollectibleResource _resourceCache;
+    private CollectibleResource _currentlyActiveResource;
+    private CollectibleResource _previousPriorityResource;
 
     private float _timeAtLastProximityCheck;
     private const float PROXIMITY_CHECK_INTERVAL = 0.05f;
@@ -30,7 +30,7 @@ public class InteractivityManager : MonoBehaviour {
     private bool _isPriorityCheckRequired = true;
 
     private void Awake() {
-        _nearbyResources = new List<Resource>();
+        _nearbyResources = new List<CollectibleResource>();
         _raycastHits = new RaycastHit[5];
     }
 
@@ -67,7 +67,7 @@ public class InteractivityManager : MonoBehaviour {
     /**
      * Player is not looking at a specific resource, try to find nearest resource to grab
      **/
-    private bool TryGetResourceByProximity(out Resource proximityResource) {
+    private bool TryGetResourceByProximity(out CollectibleResource proximityResource) {
         proximityResource = null;
         int count = _nearbyResources.Count;
         if (count > 0) {
@@ -76,17 +76,17 @@ public class InteractivityManager : MonoBehaviour {
                 _resourceCache.Proximity = Vector3.Distance(_resourceCache.transform.position, transform.position);
                 _resourceCache.Active = false;
             }
-            _nearbyResources = _nearbyResources.OrderBy(o => o.Proximity).ToList<Resource>();
+            _nearbyResources = _nearbyResources.OrderBy(o => o.Proximity).ToList<CollectibleResource>();
             proximityResource = _nearbyResources[0];
             return true;
         }
         return false;
     }
 
-    private bool TryGetResourceByPriority(int hits, out Resource priorityResource) {
+    private bool TryGetResourceByPriority(int hits, out CollectibleResource priorityResource) {
         priorityResource = null;
         _closestColliderOnRay = GetClosestColliderOnRay(hits, _raycastHits);
-        if (_closestColliderOnRay.TryGetComponent<Resource>(out priorityResource)) {
+        if (_closestColliderOnRay.TryGetComponent<CollectibleResource>(out priorityResource)) {
             _previousPriorityResource = priorityResource;
             return true;
         }
@@ -122,7 +122,7 @@ public class InteractivityManager : MonoBehaviour {
 
     private void OnTriggerEnter(Collider other) {
         Debug.Log("KB: other: " + other.name);
-        if (other.TryGetComponent<Resource>(out _resourceCache)) {
+        if (other.TryGetComponent<CollectibleResource>(out _resourceCache)) {
             if (!_nearbyResources.Contains(_resourceCache)) {
                 _nearbyResources.Add(_resourceCache);
             }
@@ -132,7 +132,7 @@ public class InteractivityManager : MonoBehaviour {
 
     private void OnTriggerExit(Collider other) {
         Debug.Log("KB: exited trigger: " + other.name);
-        if (other.TryGetComponent<Resource>(out _resourceCache)) {
+        if (other.TryGetComponent<CollectibleResource>(out _resourceCache)) {
             if (_nearbyResources.Contains(_resourceCache)) {
                 _nearbyResources.Remove(_resourceCache);
             }

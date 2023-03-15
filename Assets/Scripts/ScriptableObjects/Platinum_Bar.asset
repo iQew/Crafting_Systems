@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Platinum_Bar
   m_EditorClassIdentifier: 
   ID: 401
-  name: Platinum Bar
-  description: A bar made from platinum ore. Can be used in crafting.
-  artwork: {fileID: 0}
-  quantity: 0
+  Name: Platinum Bar
+  Description: 
+  Artwork: {fileID: 21300000, guid: 4114c3be68588d14d8a6f646da3825d4, type: 3}
+  StackSize: 99

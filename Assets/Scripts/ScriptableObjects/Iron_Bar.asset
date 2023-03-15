@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Iron_Bar
   m_EditorClassIdentifier: 
   ID: 201
-  name: Iron Bar
-  description: A bar made from iron ore. Can be used in crafting.
-  artwork: {fileID: 0}
-  quantity: 0
+  Name: Iron Bar
+  Description: 
+  Artwork: {fileID: 21300000, guid: 001bb6c33519c0f429567c34d9bc034c, type: 3}
+  StackSize: 99
