@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.InputSystem.Controls;
 
 [RequireComponent(typeof(MeshRenderer))]
 public class CollectibleResource : MonoBehaviour {
@@ -21,7 +22,7 @@ public class CollectibleResource : MonoBehaviour {
     [Tooltip("How many resources are looted MIN and MAX.")]
     private Vector2 _dropQuantityMinMax = new Vector2(1f, 1f);
 
-    public int Quantity { get => (int)Random.Range(_dropQuantityMinMax.x, _dropQuantityMinMax.y); private set { } }
+    public int Quantity { get => Mathf.RoundToInt(Random.Range(_dropQuantityMinMax.x, _dropQuantityMinMax.y)); private set { } }
 
     [SerializeField]
     private ItemDataSO _itemData;

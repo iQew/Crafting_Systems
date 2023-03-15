@@ -16,4 +16,4 @@ MonoBehaviour:
   Name: Stone
   Description: 
   Artwork: {fileID: 21300000, guid: 7ae18794f42b48148be69220d879b346, type: 3}
-  StackSize: 500
+  StackSize: 5

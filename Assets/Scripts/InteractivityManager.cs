@@ -121,12 +121,10 @@ public class InteractivityManager : MonoBehaviour {
     }
 
     private void OnTriggerEnter(Collider other) {
-        Debug.Log("KB: other: " + other.name);
         if (other.TryGetComponent<CollectibleResource>(out _resourceCache)) {
             if (!_nearbyResources.Contains(_resourceCache)) {
                 _nearbyResources.Add(_resourceCache);
             }
-            Debug.Log("KB: added resource node to list.");
         }
     }
 
