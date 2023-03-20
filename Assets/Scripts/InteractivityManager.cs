@@ -99,10 +99,10 @@ public class InteractivityManager : MonoBehaviour {
                 _currentlyActiveResource.PickUp();
                 _nearbyResources.Remove(_currentlyActiveResource);
             } else {
-                Debug.Log("KB: Pickup failed.");
+                //Debug.Log("KB: Pickup failed.");
             }
         } else {
-            Debug.Log("KB: There is nothing to pick up.");
+            //Debug.Log("KB: There is nothing to pick up.");
         }
     }
 
@@ -129,13 +129,11 @@ public class InteractivityManager : MonoBehaviour {
     }
 
     private void OnTriggerExit(Collider other) {
-        Debug.Log("KB: exited trigger: " + other.name);
         if (other.TryGetComponent<CollectibleResource>(out _resourceCache)) {
             if (_nearbyResources.Contains(_resourceCache)) {
                 _nearbyResources.Remove(_resourceCache);
             }
             _resourceCache.Active = false;
-            Debug.Log("KB: removed resource node to list.");
         }
     }
 

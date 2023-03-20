@@ -16,4 +16,5 @@ MonoBehaviour:
   Name: Copper Ore
   Description: 
   Artwork: {fileID: 21300000, guid: 4dc1d7173e919674da31a5a94ea7f3f9, type: 3}
+  Quality: 1
   StackSize: 250

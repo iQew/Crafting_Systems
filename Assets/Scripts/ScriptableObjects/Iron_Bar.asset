@@ -16,4 +16,5 @@ MonoBehaviour:
   Name: Iron Bar
   Description: 
   Artwork: {fileID: 21300000, guid: 001bb6c33519c0f429567c34d9bc034c, type: 3}
+  Quality: 2
   StackSize: 99

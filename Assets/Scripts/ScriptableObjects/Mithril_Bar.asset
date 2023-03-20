@@ -16,4 +16,5 @@ MonoBehaviour:
   Name: Mithril Bar
   Description: 
   Artwork: {fileID: 21300000, guid: 2d250b7f13265a7439949a39e48c69ea, type: 3}
+  Quality: 3
   StackSize: 99

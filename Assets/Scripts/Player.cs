@@ -15,7 +15,10 @@ public class Player : MonoBehaviour {
     [SerializeField]
     private UI_Inventory _UI_Inventory;
 
-    private Inventory _inventory;
+    [SerializeField]
+    private UI_LootInfoBox _UI_LootInfoBox;
+
+    private Inventory _inventory;    
 
     private void Awake() {
         if (Instance == null) {
@@ -23,7 +26,7 @@ public class Player : MonoBehaviour {
         } else {
             Debug.LogError("There should only be one instance of " + name + ".");
         }
-        _inventory = new Inventory(6, 5);
+        _inventory = new Inventory(6, 5);        
     }
 
     private void Start() {
@@ -33,6 +36,8 @@ public class Player : MonoBehaviour {
     public bool PickupResource(CollectibleResource resource) {
         bool itemAdded = _inventory.AddItem(resource.GetItemDataSO(), resource.Quantity);
         if (itemAdded) {
+            Vector2 XP_Data = PlayerStats.Instance.AddExperienceGatheringForaging(resource.GetItemDataSO());
+            _UI_LootInfoBox.Show(PlayerStats.ExperienceType.GATHERING_FORAGING, (int)XP_Data.x, (int)XP_Data.y);
             _UI_Inventory.Refresh(_inventory);
             return true;
         }

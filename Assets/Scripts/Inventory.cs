@@ -25,17 +25,17 @@ public class Inventory {
 
     public bool AddItem(ItemDataSO item, int quantity) {
         Debug.Assert(item.StackSize >= quantity);
-        Debug.Log("KB: trying to pickup " + item.name + " x" + quantity);
+        //Debug.Log("KB: trying to pickup " + item.name + " x" + quantity);
         int count = ItemDataList.Count;
         if (ItemDataList.Count >= _size) {
             // no more space in inventory
-            Debug.Log("KB: no more space in inventory.");
+            //Debug.Log("KB: no more space in inventory.");
             return false;
         } else if (ItemDataList.Count == 0) {
             // nothing in the list yet
             ItemDataList.Add(item);
             ItemQuantityList.Add(quantity);
-            Debug.Log("KB: No item in the list yet, adding item: " + item.Name);
+            //Debug.Log("KB: No item in the list yet, adding item: " + item.Name);
             return true;
         } else {
             _availableStacksIndices.Clear();
@@ -43,7 +43,7 @@ public class Inventory {
                 if (ItemDataList[i].ID == item.ID) {
                     if (ItemQuantityList[i] + quantity <= ItemDataList[i].StackSize) {
                         ItemQuantityList[i] += quantity;
-                        Debug.Log("KB: " + item.name + " was added to stack at index: " + i);
+                        //Debug.Log("KB: " + item.name + " was added to stack at index: " + i);
                         return true;
                     } else {
 
@@ -55,7 +55,7 @@ public class Inventory {
                             ItemQuantityList[i] += availableSpace;
                             quantity -= availableSpace;
 
-                            Debug.Log("KB: found stack of same ID, increase capacity to: " + availableSpace + " at index: " + i);
+                            //Debug.Log("KB: found stack of same ID, increase capacity to: " + availableSpace + " at index: " + i);
                         }
                     }
                 }

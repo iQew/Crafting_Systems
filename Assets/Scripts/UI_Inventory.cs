@@ -4,8 +4,8 @@ using UnityEngine;
 using UnityEngine.UI;
 
 public class UI_Inventory : MonoBehaviour {
-        
-    
+
+
     [SerializeField]
     private UI_InventorySlot _inventorySlotPrefab;
 
@@ -31,14 +31,20 @@ public class UI_Inventory : MonoBehaviour {
     private List<ItemDataSO> _itemDataList;
     private List<int> _itemQuantityList;
 
-    private void Awake() {        
-        _inventorySlots = new List<UI_InventorySlot>();
-        _inventorySlotsGridTransform = _parentRectTransform.transform;
-    }
+    private bool _isInitialized;
 
     private void Start() {
-        BuildInventoryGrid();
-        Hide();
+        Initialize();
+    }
+
+    private void Initialize() {
+        if (!_initialized) {
+            _inventorySlots = new List<UI_InventorySlot>();
+            _inventorySlotsGridTransform = _parentRectTransform.transform;
+            BuildInventoryGrid();
+            _initialized = true;
+        }
+
     }
 
     private void BuildInventoryGrid() {
@@ -54,7 +60,7 @@ public class UI_Inventory : MonoBehaviour {
                 // initializing slots
                 _inventorySlotRectTransform = _inventorySlotCache.GetComponent<RectTransform>();
                 _inventorySlotRectTransform.sizeDelta = Vector2.one * _slotSize;
-                
+
                 // calculating offsets for slots that have
                 // top left alignment (need to offset to the right and down)
                 Vector2 padding = new Vector2(_spacing * k, _spacing * j);
@@ -72,6 +78,7 @@ public class UI_Inventory : MonoBehaviour {
     }
 
     public void Refresh(Inventory inventory) {
+        Initialize();
         _itemDataList = inventory.ItemDataList;
         _itemQuantityList = inventory.ItemQuantityList;
 
@@ -81,7 +88,7 @@ public class UI_Inventory : MonoBehaviour {
         }
     }
 
-    public void Show() {        
+    public void Show() {
         gameObject.SetActive(true);
     }
 

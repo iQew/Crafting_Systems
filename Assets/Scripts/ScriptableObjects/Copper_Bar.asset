@@ -16,4 +16,5 @@ MonoBehaviour:
   Name: Copper Bar
   Description: 
   Artwork: {fileID: 21300000, guid: 803276dc63c28e34a84459fa14890c1a, type: 3}
+  Quality: 1
   StackSize: 99

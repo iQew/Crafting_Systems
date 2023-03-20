@@ -16,4 +16,5 @@ MonoBehaviour:
   Name: Mithril Ore
   Description: 
   Artwork: {fileID: 21300000, guid: 4f02e6f647233ae40b000a4b27f0faa0, type: 3}
+  Quality: 3
   StackSize: 250

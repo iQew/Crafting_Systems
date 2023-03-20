@@ -22,7 +22,7 @@ public class GameWindowsManager : MonoBehaviour {
 
     private void Awake() {
         _gameWindowsBackground.SetActive(false);
-        Cursor.lockState = CursorLockMode.Confined;
+        _UI_Inventory.Hide();
     }
 
     private void Start() {
