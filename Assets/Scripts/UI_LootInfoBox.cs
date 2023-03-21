@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
-using Unity.VisualScripting;
-using UnityEditor.Experimental.GraphView;
 
 [RequireComponent(typeof(CanvasGroup))]
 public class UI_LootInfoBox : MonoBehaviour {
@@ -30,12 +28,14 @@ public class UI_LootInfoBox : MonoBehaviour {
     private CanvasGroup _canvasGroup;
 
     private bool _isFadingIn = false;
+    private bool _isFadingOut = false;
     private bool _isAnimatingFadeInOut = false;
     private float _animationStepFadeInOut = 0f;
 
     private int _startLevel;
     private int _startXPRequirement;
     private int _gainedXP;
+    private int _totalGainedXP;
     private int _currentlyDisplayedXP;
     private int _currentlyDisplayedLevel;
     private float _fillingAmount;
@@ -50,35 +50,28 @@ public class UI_LootInfoBox : MonoBehaviour {
         }
     }
 
-    private void Initialize() {
-        if (!_initialized) {
-            _fullCircleBarMaterial = _fullCircleBar.material;
-            _fullCircleBarMaterial.SetFloat("_FillingAmount", 0f);
-            _fullCircleBarMaterial.SetFloat("_Opacity", 0f);
-            _canvasGroup = GetComponent<CanvasGroup>();
-            _initialized = true;
-        }
-    }
-
-    private void Update() {        
+    private void Update() {
         if (_isAnimatingFadeInOut) {
-            if(_isFadingIn) {
+            if (_isFadingIn) {
                 _animationStepFadeInOut += Time.deltaTime / _animationTime;
-            } else {
-                if(Time.time - _updateFinishedTime >= _fadeOutDelay) {
+            }
+            if (_isFadingOut) {
+                if (Time.time - _updateFinishedTime >= _fadeOutDelay) {
                     _animationStepFadeInOut -= Time.deltaTime / _animationTime;
                 }
             }
-            
             _animationStepFadeInOut = Mathf.Clamp01(_animationStepFadeInOut);
             float opacity = (float)Tweening.EaseOutCubic(_animationStepFadeInOut);
             _fullCircleBarMaterial.SetFloat("_Opacity", opacity);
             _canvasGroup.alpha = opacity;
 
-            if ((_isFadingIn && _animationStepFadeInOut == 1f)
-                || (!_isFadingIn && _animationStepFadeInOut == 0)) {
-                _isAnimatingFadeInOut = false;
+            if ((_isFadingIn && _animationStepFadeInOut == 1f)) {
+                _isFadingIn = false;
             }
+            if ((_isFadingOut && _animationStepFadeInOut == 0)) {
+                _isFadingOut = false;
+            }
+            _isAnimatingFadeInOut = _isFadingIn || _isFadingOut;
         }
         if (!_isAnimatingFadeInOut && _isAnimatingExperienceProgress) {
             UpdateXPBar();
@@ -90,6 +83,50 @@ public class UI_LootInfoBox : MonoBehaviour {
         InitializeFadeIn();
         InitializeProgressAnimation(type, previousXP, gainedXP);
         gameObject.SetActive(true);
+    }
+
+    private void Initialize() {
+        if (!_initialized) {
+            _fullCircleBarMaterial = _fullCircleBar.material;
+            _fullCircleBarMaterial.SetFloat("_FillingAmount", 0f);
+            _fullCircleBarMaterial.SetFloat("_Opacity", 0f);
+            _canvasGroup = GetComponent<CanvasGroup>();
+            _initialized = true;
+        }
+    }
+
+    private void InitializeFadeIn() {
+        if (!_isAnimatingFadeInOut && !_isAnimatingExperienceProgress) {
+            _isFadingIn = true;
+            _animationStepFadeInOut = 0f;
+            _isAnimatingFadeInOut = true;
+        } else if(_isFadingOut) {
+            _isFadingIn = true;
+            _isFadingOut = false;            
+        }
+    }
+
+    private void InitializeFadeOut() {
+        _isFadingOut = true;
+        _animationStepFadeInOut = 1f;
+        _isAnimatingFadeInOut = true;
+    }
+
+    private void InitializeProgressAnimation(PlayerStats.ExperienceType type, int startXP, int gainedXP) {
+        _gainedXP += gainedXP;
+        _totalGainedXP += gainedXP;
+        _experienceBarExperienceText.text = "+ " + _totalGainedXP + " " + StringHelper.EXPERIENCE_BAR_TITLE_GATHERING_FORAGING;
+
+        if (!_isAnimatingExperienceProgress) {
+            _startLevel = PlayerStats.Instance.GetLevelByTotalXP(startXP);
+            _startXPRequirement = PlayerStats.Instance.GetRequiredXPForLevelUp(_startLevel);
+            _experienceBarLevelText.text = _startLevel.ToString();
+            _currentlyDisplayedXP = startXP - PlayerStats.Instance.GetTotalXPAtLevel(_startLevel);
+            _currentlyDisplayedLevel = _startLevel;
+            _fillingAmount = _currentlyDisplayedXP / (float)(PlayerStats.Instance.GetRequiredXPForLevelUp(_startLevel));
+        }
+
+        _isAnimatingExperienceProgress = true;
     }
 
     private void UpdateXPBar() {
@@ -110,37 +147,8 @@ public class UI_LootInfoBox : MonoBehaviour {
         _isAnimatingExperienceProgress = _gainedXP > 0;
         if (!_isAnimatingExperienceProgress) {
             _updateFinishedTime = Time.time;
-            Debug.Log("KB: time saved");
-            Hide();
+            _totalGainedXP = 0;
+            InitializeFadeOut();
         }
-    }
-
-    private void InitializeProgressAnimation(PlayerStats.ExperienceType type, int startXP, int gainedXP) {
-        _experienceBarExperienceText.text = "+ " + gainedXP + " " + StringHelper.EXPERIENCE_BAR_TITLE_GATHERING_FORAGING;
-
-        _startLevel = PlayerStats.Instance.GetLevelByTotalXP(startXP);
-        _startXPRequirement = PlayerStats.Instance.GetRequiredXPForLevelUp(_startLevel);
-        _experienceBarLevelText.text = _startLevel.ToString();
-
-        _gainedXP = gainedXP;
-        _currentlyDisplayedXP = startXP - PlayerStats.Instance.GetTotalXPAtLevel(_startLevel);
-        _currentlyDisplayedLevel = _startLevel;
-
-        _fillingAmount = _currentlyDisplayedXP / (float)(PlayerStats.Instance.GetRequiredXPForLevelUp(_startLevel));
-        _isAnimatingExperienceProgress = true;
-    }
-
-    private void InitializeFadeIn() {
-        if (!_isFadingIn) {
-            _isFadingIn = true;
-            _animationStepFadeInOut = 0f;
-            _isAnimatingFadeInOut = true;
-        }
-    }
-
-    private void Hide() {
-        _isFadingIn = false;
-        _animationStepFadeInOut = 1f;
-        _isAnimatingFadeInOut = true;
     }
 }
