@@ -2582,7 +2582,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _experienceBarLevelText: {fileID: 636394337}
   _experienceBarExperienceText: {fileID: 956264849}
-  _animationTime: 5
+  _animationTime: 1
   _fullCircleBar: {fileID: 206514708}
 --- !u!4 &364426900 stripped
 Transform:
