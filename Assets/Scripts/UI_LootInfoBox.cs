@@ -9,22 +9,19 @@ using Unity.VisualScripting;
 public class UI_LootInfoBox : MonoBehaviour {
 
     [SerializeField]
-    private Image _experienceBarFilling;
-
-    [SerializeField]
     private TextMeshProUGUI _experienceBarLevelText;
 
     [SerializeField]
     private TextMeshProUGUI _experienceBarExperienceText;
 
     [SerializeField]
-    private List<Image> _experienceBarSymbolElements;
-
-    [SerializeField]
     private float _animationTime = 0.175f;
 
+    [SerializeField]
+    private Image _fullCircleBar;
+    private Material _fullCircleBarMaterial;
+
     private CanvasGroup _canvasGroup;
-    private List<Material> _materialsToFade;
 
     private bool _isFadingIn = false;
     private bool _isAnimatingFadeInOut = false;
@@ -49,26 +46,22 @@ public class UI_LootInfoBox : MonoBehaviour {
 
     private void Initialize() {
         if (!_initialized) {
-            _materialsToFade = new List<Material>();
+            _fullCircleBarMaterial = _fullCircleBar.material;
             _canvasGroup = GetComponent<CanvasGroup>();
-            foreach (Image image in _experienceBarSymbolElements) {
-                _materialsToFade.Add(image.material);
-            }
             _initialized = true;
         }
-        gameObject.SetActive(true);
     }
 
     private void Update() {
         if (_isAnimatingFadeInOut) {
-            foreach (Material mat in _materialsToFade) {
-                _animationStepFadeInOut += _isFadingIn ? Time.deltaTime / _animationTime : -Time.deltaTime / _animationTime;
-                if (_animationStepFadeInOut <= 1f && _animationStepFadeInOut >= 0f) {
-                    mat.SetFloat("_Opacity", _animationStepFadeInOut);
-                    _canvasGroup.alpha = _animationStepFadeInOut;
-                } else {
-                    _isAnimatingFadeInOut = false;
-                }
+            _animationStepFadeInOut += _isFadingIn ? Time.deltaTime / _animationTime : -Time.deltaTime / _animationTime;
+            _animationStepFadeInOut = Mathf.Max(_animationStepFadeInOut, 0f);
+            _animationStepFadeInOut = Mathf.Min(_animationStepFadeInOut, 1f);
+            _fullCircleBarMaterial.SetFloat("_Opacity", _animationStepFadeInOut);
+            _canvasGroup.alpha = _animationStepFadeInOut;
+            
+            if(_animationStepFadeInOut == 1f || _animationStepFadeInOut == 0) {
+                _isAnimatingFadeInOut = false;
             }
         }
         if (_isAnimatingExperienceProgress) {
@@ -96,7 +89,8 @@ public class UI_LootInfoBox : MonoBehaviour {
             _experienceBarLevelText.text = _startLevel.ToString();
         }
         _fillingAmount = _currentlyDisplayedXP / (float)requiredXP;
-        _experienceBarFilling.fillAmount = _fillingAmount == 1f ? 0 : _fillingAmount;
+        float fillingAmountFracted = _fillingAmount == 1f ? 0 : _fillingAmount;
+        _fullCircleBarMaterial.SetFloat("_FillingAmount", fillingAmountFracted);
         _isAnimatingExperienceProgress = _gainedXP > 0;
     }
 
@@ -116,9 +110,11 @@ public class UI_LootInfoBox : MonoBehaviour {
     }
 
     private void InitializeFadeIn() {
-        _isFadingIn = true;
-        _animationStepFadeInOut = 0f;
-        _isAnimatingFadeInOut = true;
+        if (!_isFadingIn) {
+            _isFadingIn = true;
+            _animationStepFadeInOut = 0f;
+            _isAnimatingFadeInOut = true;
+        }
     }
 
     private void Hide() {
