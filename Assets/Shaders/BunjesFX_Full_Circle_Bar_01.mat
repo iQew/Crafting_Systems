@@ -28,7 +28,7 @@ Material:
     m_Floats:
     - _CenterPadding: 0.075
     - _ColorMask: 15
-    - _FillingAmount: 0.2195238
+    - _FillingAmount: 0.51533335
     - _GradientMultiply: 1.425
     - _GradientPower: 0.85
     - _InnerRingPadding: 0.05

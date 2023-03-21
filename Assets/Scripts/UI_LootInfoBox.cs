@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using Unity.VisualScripting;
 
 [RequireComponent(typeof(CanvasGroup))]
 public class UI_LootInfoBox : MonoBehaviour {
@@ -14,7 +15,10 @@ public class UI_LootInfoBox : MonoBehaviour {
     private TextMeshProUGUI _experienceBarExperienceText;
 
     [SerializeField]
-    private float _animationTime = 0.5f;
+    private float _fadeInOutTime = 0.5f;
+
+    [SerializeField]
+    private float _progressUpdateTime = 3f;
 
     [SerializeField]
     private float _fadeOutDelay = 0.5f;
@@ -33,16 +37,17 @@ public class UI_LootInfoBox : MonoBehaviour {
     private float _animationStepFadeInOut = 0f;
 
     private int _startLevel;
-    private int _startXPRequirement;
-    private int _gainedXP;
-    private int _totalGainedXP;
-    private int _currentlyDisplayedXP;
-    private int _currentlyDisplayedLevel;
-    private float _fillingAmount;
+    private float _totalGainedXP;
     private bool _isAnimatingExperienceProgress;
-    private float _animationStepExperienceProgress;
 
     private bool _initialized;
+    private float _runningXP;
+    private float _runningXPTarget;  
+
+    private float _currentTotalXP;
+    private int _runningLevel = 1;
+    private float _currentXP;
+    private float _currentStartXP;
 
     private void Awake() {
         if (!_initialized) {
@@ -53,11 +58,11 @@ public class UI_LootInfoBox : MonoBehaviour {
     private void Update() {
         if (_isAnimatingFadeInOut) {
             if (_isFadingIn) {
-                _animationStepFadeInOut += Time.deltaTime / _animationTime;
+                _animationStepFadeInOut += Time.deltaTime / _fadeInOutTime;
             }
             if (_isFadingOut) {
                 if (Time.time - _updateFinishedTime >= _fadeOutDelay) {
-                    _animationStepFadeInOut -= Time.deltaTime / _animationTime;
+                    _animationStepFadeInOut -= Time.deltaTime / _fadeInOutTime;
                 }
             }
             _animationStepFadeInOut = Mathf.Clamp01(_animationStepFadeInOut);
@@ -66,7 +71,7 @@ public class UI_LootInfoBox : MonoBehaviour {
             _canvasGroup.alpha = opacity;
 
             if ((_isFadingIn && _animationStepFadeInOut == 1f)) {
-                _isFadingIn = false;
+                _isFadingIn = false;                
             }
             if ((_isFadingOut && _animationStepFadeInOut == 0)) {
                 _isFadingOut = false;
@@ -113,41 +118,59 @@ public class UI_LootInfoBox : MonoBehaviour {
     }
 
     private void InitializeProgressAnimation(PlayerStats.ExperienceType type, int startXP, int gainedXP) {
-        _gainedXP += gainedXP;
         _totalGainedXP += gainedXP;
+        _runningXPTarget = _totalGainedXP;
         _experienceBarExperienceText.text = "+ " + _totalGainedXP + " " + StringHelper.EXPERIENCE_BAR_TITLE_GATHERING_FORAGING;
-
-        if (!_isAnimatingExperienceProgress) {
+        if (!_isAnimatingExperienceProgress) { // animation has been stopped and needs to be initialized again/for the first time
+            _currentStartXP = startXP;
             _startLevel = PlayerStats.Instance.GetLevelByTotalXP(startXP);
-            _startXPRequirement = PlayerStats.Instance.GetRequiredXPForLevelUp(_startLevel);
             _experienceBarLevelText.text = _startLevel.ToString();
-            _currentlyDisplayedXP = startXP - PlayerStats.Instance.GetTotalXPAtLevel(_startLevel);
-            _currentlyDisplayedLevel = _startLevel;
-            _fillingAmount = _currentlyDisplayedXP / (float)(PlayerStats.Instance.GetRequiredXPForLevelUp(_startLevel));
+        } else {
+            // animation was interrupted by another item pickup
+            // example: animated 50 out of 100 totalGainedXP and
+            // then the player picks up another item for 100 gainedXP
+            // new target needs to take the previously animated 50
+            // points of XP into consideration for the updated totalGainedXP
+            _runningXPTarget = _totalGainedXP - _runningXP;
         }
 
         _isAnimatingExperienceProgress = true;
     }
 
     private void UpdateXPBar() {
-        if (_gainedXP > 0) {
-            _currentlyDisplayedXP++;
-            _gainedXP--;
+        // xp bar needs to be updated until all of the gained xp has been animated
+        if(_runningXP < _totalGainedXP) {
+            _runningXP += Time.deltaTime / _progressUpdateTime * _runningXPTarget;
         }
-        int requiredXP = PlayerStats.Instance.GetRequiredXPForLevelUp(_startLevel);
-        if (_currentlyDisplayedXP > requiredXP) {
-            _currentlyDisplayedXP -= requiredXP;
+        _runningXP = Mathf.Min(_runningXP, _totalGainedXP);
+
+        // currentTotalXP is the total xp the player currently has at this point in time
+        // currentXP is the xp that has been animated so far
+        _currentTotalXP = _currentStartXP + _runningXP;
+        _currentXP = _currentTotalXP - PlayerStats.Instance.GetTotalXPAtLevel(_runningLevel);  
+        
+        // compute currently displayed level and xp requirements for said level
+        _runningLevel = PlayerStats.Instance.GetLevelByTotalXP((int)_currentTotalXP);
+        float currentTarget = PlayerStats.Instance.GetRequiredXPForLevelUp(_runningLevel);
+
+        _currentXP = Mathf.Min(_currentXP, currentTarget);
+
+        float progress = _currentXP / (float)PlayerStats.Instance.GetRequiredXPForLevelUp(_runningLevel);
+        
+        // update level number text when a level up has been detected
+        if(_runningLevel > _startLevel) {
             _startLevel++;
-            requiredXP = PlayerStats.Instance.GetRequiredXPForLevelUp(_startLevel);
             _experienceBarLevelText.text = _startLevel.ToString();
         }
-        _fillingAmount = _currentlyDisplayedXP / (float)requiredXP;
-        float fillingAmountFracted = _fillingAmount == 1f ? 0 : _fillingAmount;
-        _fullCircleBarMaterial.SetFloat("_FillingAmount", fillingAmountFracted);
-        _isAnimatingExperienceProgress = _gainedXP > 0;
+
+        _fullCircleBarMaterial.SetFloat("_FillingAmount", progress);
+        _isAnimatingExperienceProgress = _runningXP < _totalGainedXP;
+
+        // finishing up to prepare fade out animation and prepare values to animate again
         if (!_isAnimatingExperienceProgress) {
             _updateFinishedTime = Time.time;
             _totalGainedXP = 0;
+            _runningXP = 0;
             InitializeFadeOut();
         }
     }
