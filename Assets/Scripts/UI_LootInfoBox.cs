@@ -16,10 +16,10 @@ public class UI_LootInfoBox : MonoBehaviour {
     private Material _flashMaterial;
 
     [SerializeField]
-    private float _fadeInOutTime = 0.5f;
+    private float _fadeInOutDuration = 0.5f;
 
     [SerializeField]
-    private float _progressUpdateTime = 3f;
+    private float _progressUpdateDuration = 3f;
 
     [SerializeField]
     private float _fadeOutDelay = 0.5f;
@@ -55,6 +55,11 @@ public class UI_LootInfoBox : MonoBehaviour {
     private float _currentXP;
     private float _currentStartXP;
 
+    [SerializeField]
+    private float _levelUpFlashDuration = 0.25f;
+    private float _levelUpFlashAnimationStep;
+    private bool _isShowingLevelUpFlash;
+
     private void Awake() {
         if (!_initialized) {
             gameObject.SetActive(false);
@@ -76,7 +81,7 @@ public class UI_LootInfoBox : MonoBehaviour {
     }
 
     private void FadeIn() {
-        _animationStepFadeInOut += Time.deltaTime / _fadeInOutTime;
+        _animationStepFadeInOut += Time.deltaTime / _fadeInOutDuration;
         _animationStepFadeInOut = Mathf.Clamp01(_animationStepFadeInOut);
         float fadeProgress = (float)Tweening.EaseOutCubic(_animationStepFadeInOut);
         _fullCircleBarMaterial.SetFloat("_FlashOpacity", (1f - fadeProgress) * _experienceBarFlashBrightness);
@@ -88,7 +93,7 @@ public class UI_LootInfoBox : MonoBehaviour {
 
     private void FadeOut() {
         if (Time.time - _updateFinishedTime >= _fadeOutDelay) {
-            _animationStepFadeInOut -= Time.deltaTime / _fadeInOutTime;
+            _animationStepFadeInOut -= Time.deltaTime / _fadeInOutDuration;
             _animationStepFadeInOut = Mathf.Clamp01(_animationStepFadeInOut);
             float fadeProgress = (float)Tweening.EaseOutCubic(_animationStepFadeInOut);
             _fullCircleBarMaterial.SetFloat("_Opacity", fadeProgress);
@@ -156,7 +161,7 @@ public class UI_LootInfoBox : MonoBehaviour {
     private void UpdateXPBar() {
         // xp bar needs to be updated until all of the gained xp has been animated
         if (_runningXP < _totalGainedXP) {
-            _runningXP += Time.deltaTime / _progressUpdateTime * _runningXPTarget;
+            _runningXP += Time.deltaTime / _progressUpdateDuration * _runningXPTarget;
         }
         _runningXP = Mathf.Min(_runningXP, _totalGainedXP);
 
@@ -177,6 +182,15 @@ public class UI_LootInfoBox : MonoBehaviour {
         if (_runningLevel > _startLevel) {
             _startLevel++;
             _experienceBarLevelText.text = _startLevel.ToString();
+            _levelUpFlashAnimationStep = 0;
+            _isShowingLevelUpFlash = true;
+        }
+
+        if(_isShowingLevelUpFlash) {
+            _levelUpFlashAnimationStep += Time.deltaTime / _levelUpFlashDuration;
+            float flashProgress = Mathf.Clamp01((float)Tweening.EaseOutCirc(_levelUpFlashAnimationStep));
+            _flashMaterial.SetFloat("_AlphaBoost", Mathf.Lerp(1f, 0f, flashProgress));
+            _isShowingLevelUpFlash = Mathf.Clamp01(_levelUpFlashAnimationStep) != 1f;
         }
 
         _fullCircleBarMaterial.SetFloat("_FillingAmount", progress);

@@ -2583,12 +2583,13 @@ MonoBehaviour:
   _experienceBarLevelText: {fileID: 636394337}
   _experienceBarExperienceText: {fileID: 956264849}
   _flashImage: {fileID: 1785069572}
-  _fadeInOutTime: 0.5
-  _progressUpdateTime: 2
+  _fadeInOutDuration: 0.5
+  _progressUpdateDuration: 3
   _fadeOutDelay: 0.5
   _XPTypeTextAnimationOffset: -25
   _experienceBarFlashBrightness: 0.125
   _fullCircleBar: {fileID: 206514708}
+  _levelUpFlashDuration: 0.75
 --- !u!4 &364426900 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6203433961695289980, guid: a4b561ed8146cb048b5a631d09da5402,
@@ -9976,7 +9977,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_SizeDelta: {x: -16, y: -16}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1785069572
 MonoBehaviour:
