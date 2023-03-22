@@ -7,8 +7,8 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: BunjesFX_Full_Circle_Bar_01
-  m_Shader: {fileID: 4800000, guid: 2f37025b29ada604b84c6c7c9a515c4d, type: 3}
+  m_Name: BunjesFX_UI_Additive_01
+  m_Shader: {fileID: 4800000, guid: cea330bc38dd7f245acff653a8ec7b9b, type: 3}
   m_ValidKeywords: []
   m_InvalidKeywords: []
   m_LightmapFlags: 4
@@ -24,18 +24,15 @@ Material:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - _texcoord:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
-    - _CenterPadding: 0.075
+    - _AlphaBoost: 0
     - _ColorMask: 15
-    - _FillingAmount: 0.15332668
-    - _FlashOpacity: 0
-    - _GradientMultiply: 1.425
-    - _GradientPower: 0.85
-    - _InnerRingPadding: 0.05
-    - _InnerRingSize: 0.04
     - _Opacity: 1
-    - _PaddingBackground: 0.133
     - _Stencil: 0
     - _StencilComp: 8
     - _StencilOp: 0
@@ -44,7 +41,4 @@ Material:
     - _UseUIAlphaClip: 0
     m_Colors:
     - _Color: {r: 1, g: 1, b: 1, a: 1}
-    - _ColorBackground: {r: 0.44277322, g: 0.45329136, b: 0.4716981, a: 1}
-    - _ColorBar: {r: 0.9339623, g: 0.5247396, b: 0.08370411, a: 0}
-    - _InnerRingColor: {r: 0.9622642, g: 0.9622642, b: 0.9622642, a: 0}
   m_BuildTextureStacks: []
