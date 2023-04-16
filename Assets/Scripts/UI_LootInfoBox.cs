@@ -60,6 +60,8 @@ public class UI_LootInfoBox : MonoBehaviour {
     private float _levelUpFlashAnimationStep;
     private bool _isShowingLevelUpFlash;
 
+    private ItemDataSO _itemData;
+
     private void Awake() {
         if (!_initialized) {
             gameObject.SetActive(false);
@@ -102,8 +104,8 @@ public class UI_LootInfoBox : MonoBehaviour {
         }
     }
 
-    public void Show(PlayerStats.ExperienceType type, int previousXP, int gainedXP) {
-        InitializeBasics();
+    public void Show(PlayerStats.ExperienceType type, int previousXP, int gainedXP, ItemDataSO itemData) {
+        InitializeBasics(itemData);
         InitializeProgressAnimation(type, previousXP, gainedXP);
         bool isCurrentlyNotShowing = !_isAnimatingFadeInOut && !_isAnimatingExperienceProgress;
         if (isCurrentlyNotShowing || _isFadingOut) {
@@ -112,8 +114,9 @@ public class UI_LootInfoBox : MonoBehaviour {
         gameObject.SetActive(true);
     }
 
-    private void InitializeBasics() {
+    private void InitializeBasics(ItemDataSO itemData) {
         if (!_initialized) {
+            _itemData = itemData;
             _canvasGroup = GetComponent<CanvasGroup>();
             _fullCircleBarMaterial = _fullCircleBar.material;
             _fullCircleBarMaterial.SetFloat("_FillingAmount", 0f);
@@ -144,7 +147,10 @@ public class UI_LootInfoBox : MonoBehaviour {
         _totalGainedXP += gainedXP;
         _runningXPTarget = _totalGainedXP;
         _experienceBarExperienceText.text = "+ " + _totalGainedXP + " " + StringHelper.EXPERIENCE_BAR_TITLE_GATHERING_FORAGING;
-        if (!_isAnimatingExperienceProgress) { // animation has been stopped and needs to be initialized again or for the first time
+        // animation has been stopped and needs to be initialized again or for the first time
+        // checking for fadeIn so start xp progress isn't set multiple times during quick pickups
+        // which would result in the xp bar making jumps
+        if (!_isAnimatingExperienceProgress && !_isFadingIn) { 
             _currentStartXP = startXP;
             _startLevel = PlayerStats.Instance.GetLevelByTotalXP(startXP);
             _experienceBarLevelText.text = _startLevel.ToString();
